@@ -1,15 +1,37 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Calculate the inverted matrix of a given matrix
+## If the inverted matrix is already cache, it will be retrieved instead of calculating again
 
-## Write a short comment describing this function
+## function to create matrix data structure
+## which encapsulate accessor function (set/get) to allow retrieving inverted matrix from cache
 
 makeCacheMatrix <- function(x = matrix()) {
-
+  m <- NULL
+  set <- function(y) {
+    x <<- y
+    m <<- NULL
+  }
+  
+  get <- function() x
+  setinverse <- function(inverse) m <<- inverse
+  getinverse <- function() m
+  list(set = set, get = get,
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
+## Return a matrix that is the inverse of 'x'
+## If it is stored in cache, it will be retrieved
+## or else, it is calculated using solve function
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  m <- x$getinverse()
+  if(!is.null(m)) {
+    message("getting cached data")
+    return(m)
+  }
+  data <- x$get()
+  m <- solve(data)
+  x$setinverse(m)
+  m
 }
